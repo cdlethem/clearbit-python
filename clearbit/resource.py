@@ -49,10 +49,10 @@ class Resource(dict):
             return cls.new(response.json())
         if response.status_code == 202:
             return cls({ 'pending': True })
-        elif response.status_code == requests.codes.not_found:
-            return None
         else:
-            response.raise_for_status()
+            data = response.json()
+            data['status_code'] = response.status_code
+            return cls(data)
 
     @classmethod
     def post(cls, url, **values):
